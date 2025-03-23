@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/law-website/static/css/main.b8a8e07d.css",
+    "main.js": "/law-website/static/js/main.d0fbc7dc.js",
+    "index.html": "/law-website/index.html",
+    "main.b8a8e07d.css.map": "/law-website/static/css/main.b8a8e07d.css.map",
+    "main.d0fbc7dc.js.map": "/law-website/static/js/main.d0fbc7dc.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b8a8e07d.css",
+    "static/js/main.d0fbc7dc.js"
+  ]
+}
