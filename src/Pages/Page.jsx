@@ -1,7 +1,7 @@
-"use client"
-
 import { useState } from "react"
 import { Mail, Phone, MapPin, Scale, Users, Shield, Award, Clock, CheckCircle, Star, Menu, X } from "lucide-react"
+import emailjs from "@emailjs/browser"
+
 
 export default function LawFirmWebsite() {
   const [formData, setFormData] = useState({
@@ -14,6 +14,9 @@ export default function LawFirmWebsite() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
+  const [loading, setLoading] = useState(false)
+  const [status, setStatus] = useState(null) // success | error
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -21,10 +24,45 @@ export default function LawFirmWebsite() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Form submitted:", formData)
-    alert("Thank you for your message. We will get back to you soon!")
+
+    if (loading) return
+
+    setLoading(true)
+    setStatus(null)
+
+    try {
+      const result = await emailjs.send(
+        process.env.REACT_APP_EMAIL_SERVICE_ID,
+        process.env.REACT_APP_EMAIL_TEMPLATE_ID,
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          concern: formData.concern,
+        },
+        process.env.REACT_APP_EMAIL_PUBLIC_KEY
+      )
+
+      setStatus("success")
+      setTimeout(() => setStatus(null), 4000)
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        concern: "",
+      })
+
+    } catch (error) {
+      console.error(error)
+      setStatus("error")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const toggleMobileMenu = () => {
@@ -166,7 +204,7 @@ export default function LawFirmWebsite() {
         <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="max-w-5xl mx-auto text-center text-white">
             <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-            We don't just know the law— 
+              We don't just know the law—
               <span className="text-amber-400 block mt-2">we live it</span>
             </h1>
             <p className="text-xl md:text-2xl mb-10 text-gray-200 leading-relaxed max-w-3xl mx-auto">
@@ -654,7 +692,7 @@ export default function LawFirmWebsite() {
       </div>
 
       {/* Contact Section */}
-       <div id="contact" className="py-12 sm:py-16 lg:py-20 bg-gray-50">
+      <div id="contact" className="py-12 sm:py-16 lg:py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-12 lg:mb-16 text-gray-900">
@@ -726,10 +764,27 @@ export default function LawFirmWebsite() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    disabled={loading}
+                    className={`w-full font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg
+                    ${loading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-amber-600 hover:bg-amber-700 hover:shadow-xl transform hover:-translate-y-1 text-white"
+                      }`}
                   >
-                    Send Message
+                    {loading ? "Sending..." : "Send Message"}
                   </button>
+                  {/* ✅ ADD STATUS HERE */}
+                  {status === "success" && (
+                    <p className="text-green-600 mt-2 font-medium text-center">
+                      ✅ Message sent successfully! We'll contact you soon.
+                    </p>
+                  )}
+
+                  {status === "error" && (
+                    <p className="text-red-600 mt-2 font-medium text-center">
+                      ❌ Failed to send message. Please try again.
+                    </p>
+                  )}
                 </form>
               </div>
 
@@ -743,8 +798,7 @@ export default function LawFirmWebsite() {
                     <h4 className="text-xl sm:text-2xl font-semibold text-gray-900">Email Us</h4>
                   </div>
                   <div className="space-y-2 sm:space-y-3 sm:ml-16">
-                    <p className="text-gray-700 text-base sm:text-lg break-all">rachanashukla@yahoo.com</p>
-                    <p className="text-gray-700 text-base sm:text-lg break-all">lawyersurendramishra@gmail.com</p>
+                    <p className="text-gray-700 text-base sm:text-lg break-all">info@mishrashuklalaw.com ✅</p>
                   </div>
                 </div>
 
@@ -828,7 +882,7 @@ export default function LawFirmWebsite() {
                   </div>
                   <div className="flex items-center">
                     <Mail className="w-5 h-5 text-amber-600 mr-3" />
-                    <p>rachanashukla@yahoo.com</p>
+                    <p>info@mishrashuklalaw.com</p>
                   </div>
                 </div>
               </div>
