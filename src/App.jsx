@@ -1,9 +1,9 @@
 import React from 'react';
-import LawFirmWebsite from './pages/page';
+import LawFirmWebsite from './pages/Page';
 
 const App = () => (
   <div>
-    <LawFirmWebsite/>
+    <LawFirmWebsite />
   </div>
 );
 
