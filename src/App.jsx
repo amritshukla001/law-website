@@ -1,5 +1,5 @@
 import React from 'react';
-import LawFirmWebsite from './pages/Page';
+import LawFirmWebsite from './pages/page';
 
 const App = () => (
   <div>
